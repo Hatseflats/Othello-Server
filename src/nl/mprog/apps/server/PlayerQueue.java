@@ -13,15 +13,12 @@ public class PlayerQueue {
 	
 	public Game attemptGameCreate(Player player){
 		if(playerQueue.size() != 0){
-			Game game = new Game();
-			game.player_one = playerQueue.poll();
-			game.player_two = player;
-			game.game_id = game.player_one.player_id + game.player_two.player_id;
-			
-			return game;
+			Player playerOne = playerQueue.poll();
+			Player playerTwo = player;
+			String gameId = playerOne.getPlayerId() + playerTwo.getPlayerId();
+			return new Game(gameId, playerOne, playerTwo);
 		} else {
 			playerQueue.add(player);
-			
 			return null;
 		}
 	}

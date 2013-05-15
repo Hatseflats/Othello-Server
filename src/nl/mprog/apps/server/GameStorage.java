@@ -1,10 +1,11 @@
 package nl.mprog.apps.server;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class GameStorage {
 	
-	HashMap<String, Game> games;
+	private Map<String, Game> games;
 
 	public GameStorage() {
 		games = new HashMap<String, Game>();
@@ -17,10 +18,10 @@ public class GameStorage {
 	public int getEnemyConnection(String game_id, String player_id){
 		Game game = (Game) games.get(game_id);
 		
-		if(game.player_one.player_id == player_id){
-			return game.player_one.connection_id;
+		if(game.getPlayerOne().getPlayerId() == player_id){
+			return game.getPlayerOne().getConnectionId();
 		} else {
-			return game.player_two.connection_id;
+			return game.getPlayerTwo().getConnectionId();
 		}
 	}
 }
