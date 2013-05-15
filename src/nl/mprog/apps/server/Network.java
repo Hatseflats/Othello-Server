@@ -13,7 +13,7 @@ public class Network {
         kryo.register(Move.class);
         kryo.register(Connect.class);
         kryo.register(Error.class);
-        kryo.register(Data.class);
+        kryo.register(GameData.class);
     }
 
     static public class Move {
@@ -28,9 +28,9 @@ public class Network {
     	public String id;
     }
     
-    static public class Data {
-    	public int key;
-    	public String value;
+    static public class GameData {
+    	public String game_id;
+    	public int player_color;
     }
     
     static public class Error {

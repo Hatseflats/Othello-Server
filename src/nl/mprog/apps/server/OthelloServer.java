@@ -3,7 +3,7 @@ package nl.mprog.apps.server;
 import java.io.IOException;
 
 import nl.mprog.apps.server.Network.Connect;
-import nl.mprog.apps.server.Network.Data;
+import nl.mprog.apps.server.Network.GameData;
 import nl.mprog.apps.server.Network.Move;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -51,12 +51,17 @@ public class OthelloServer {
 					  	  
 					  games.addGame(game.game_id, game);
 					  
-					  Data response = new Data();
-					  response.key = 1;
-					  response.value = game.game_id;
+					  GameData p1 = new GameData();
+					  GameData p2 = new GameData();
 					  
-					  server.sendToTCP(game.player_one.connection_id, response);
-					  server.sendToTCP(game.player_two.connection_id, response);
+					  p1.game_id = game.game_id;
+					  p2.game_id = game.game_id;
+					  
+					  p1.player_color = 1;
+					  p2.player_color = 2;
+					  
+					  server.sendToTCP(game.player_one.connection_id, p1);
+					  server.sendToTCP(game.player_two.connection_id, p2);
 
 					  return;
 				  }
