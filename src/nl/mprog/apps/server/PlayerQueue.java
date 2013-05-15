@@ -16,7 +16,11 @@ public class PlayerQueue {
 			Game game = new Game();
 			game.player_one = playerQueue.poll();
 			game.player_two = player;
+			
 			game.game_id = game.player_one.player_id + game.player_two.player_id;
+			
+			game.player_one.color_id = 1;
+			game.player_two.color_id = 2;
 			
 			return game;
 		} else {

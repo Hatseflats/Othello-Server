@@ -67,6 +67,22 @@ public class OthelloServer {
 				  }
 			      if (object instanceof Move) {
 			    	  Move move = (Move) object;
+			    	  			    	  
+			    	  Game game = games.getGameById(move.game_id);
+			    	  
+			    	  System.out.println(game.player_one.color_id + " " + move.color_id);
+			    	  
+			    	  int connectionId;
+			    	  
+			    	  if(game.player_one.color_id == move.color_id){
+			    		  connectionId = game.player_two.connection_id;
+			    	  } else {
+			    		  connectionId = game.player_one.connection_id;
+			    	  }
+			    	  
+			    	  server.sendToTCP(connectionId, move);
+			    	  
+			    	  System.out.println("Send move for game with id: " + game.game_id);
 			      }
 			      
 			   }

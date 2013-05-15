@@ -21,7 +21,6 @@ public class Network {
         public int y;
         public String game_id;
         public int color_id;
-        public String player_id;
     }
     
     static public class Connect {
