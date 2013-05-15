@@ -1,7 +1,6 @@
 package nl.mprog.apps.server;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.EndPoint;
 
 public class Network {
@@ -19,9 +18,8 @@ public class Network {
     static public class Move {
         public int x;
         public int y;
-        public String game_id;
-        public int color_id;
-        public String player_id;
+        public String gameId;
+        public int colorId;
     }
     
     static public class Connect {
@@ -29,8 +27,8 @@ public class Network {
     }
     
     static public class GameData {
-    	public String game_id;
-    	public int player_color;
+    	public String gameId;
+    	public int playerColor;
     }
     
     static public class Error {
@@ -38,4 +36,3 @@ public class Network {
     	public String message;
     }
 }
-
