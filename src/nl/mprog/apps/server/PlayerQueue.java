@@ -13,19 +13,17 @@ public class PlayerQueue {
 	
 	public Game attemptGameCreate(Player player){
 		if(playerQueue.size() != 0){
-			Game game = new Game();
-			game.player_one = playerQueue.poll();
-			game.player_two = player;
+
+			Player playerOne = playerQueue.poll();
+			Player playerTwo = player;
 			
-			game.game_id = game.player_one.player_id + game.player_two.player_id;
+			playerOne.setColorId(1);
+			playerTwo.setColorId(2);
 			
-			game.player_one.color_id = 1;
-			game.player_two.color_id = 2;
-			
-			return game;
+			String gameId = playerOne.getPlayerId() + playerTwo.getPlayerId();
+			return new Game(gameId, playerOne, playerTwo);
 		} else {
 			playerQueue.add(player);
-			
 			return null;
 		}
 	}

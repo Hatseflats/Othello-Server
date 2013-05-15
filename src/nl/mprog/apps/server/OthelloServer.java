@@ -36,10 +36,7 @@ public class OthelloServer {
 					  
 					  Connect data = (Connect) object;
 					  
-					  Player player = new Player();
-					  
-					  player.player_id = data.id;
-					  player.connection_id = connection.getID();
+					  Player player = new Player(data.id, connection.getID());
 					  
 					  System.out.println("A player with android device ID " + data.id + " and IP " + connection.getRemoteAddressTCP() + " connected.");
 					  
@@ -47,42 +44,40 @@ public class OthelloServer {
 					  
 					  if(game == null) return;
 					  
-					  System.out.println("Created game with game_id: " + game.game_id);
+					  System.out.println("Created game with game_id: " + game.getGameId());
 					  	  
-					  games.addGame(game.game_id, game);
+					  games.addGame(game.getGameId(), game);
 					  
 					  GameData p1 = new GameData();
 					  GameData p2 = new GameData();
 					  
-					  p1.game_id = game.game_id;
-					  p2.game_id = game.game_id;
+					  p1.gameId = game.getGameId();
+					  p2.gameId = game.getGameId();
 					  
-					  p1.player_color = 1;
-					  p2.player_color = 2;
+					  p1.playerColor = 1;
+					  p2.playerColor = 2;
 					  
-					  server.sendToTCP(game.player_one.connection_id, p1);
-					  server.sendToTCP(game.player_two.connection_id, p2);
+					  server.sendToTCP(game.getPlayerOne().getConnectionId(), p1);
+					  server.sendToTCP(game.getPlayerOne().getConnectionId(), p2);
 
 					  return;
 				  }
 			      if (object instanceof Move) {
 			    	  Move move = (Move) object;
 			    	  			    	  
-			    	  Game game = games.getGameById(move.game_id);
-			    	  
-			    	  System.out.println(game.player_one.color_id + " " + move.color_id);
-			    	  
+			    	  Game game = games.getGameById(move.gameId);
+			    	  			    	  
 			    	  int connectionId;
 			    	  
-			    	  if(game.player_one.color_id == move.color_id){
-			    		  connectionId = game.player_two.connection_id;
+			    	  if(game.getPlayerOne().getColorId() == move.colorId){
+			    		  connectionId = game.getPlayerTwo().getConnectionId();
 			    	  } else {
-			    		  connectionId = game.player_one.connection_id;
+			    		  connectionId = game.getPlayerOne().getConnectionId();
 			    	  }
 			    	  
 			    	  server.sendToTCP(connectionId, move);
 			    	  
-			    	  System.out.println("Send move for game with id: " + game.game_id);
+			    	  System.out.println("Send move for game with id: " + game.getGameId());
 			      }
 			      
 			   }
