@@ -58,7 +58,7 @@ public class OthelloServer {
 					  p2.playerColor = 2;
 					  
 					  server.sendToTCP(game.getPlayerOne().getConnectionId(), p1);
-					  server.sendToTCP(game.getPlayerOne().getConnectionId(), p2);
+					  server.sendToTCP(game.getPlayerTwo().getConnectionId(), p2);
 
 					  return;
 				  }
@@ -77,7 +77,7 @@ public class OthelloServer {
 			    	  
 			    	  server.sendToTCP(connectionId, move);
 			    	  
-			    	  System.out.println("Send move for game with id: " + game.getGameId());
+			    	  System.out.println("Recieved move for game with id: " + game.getGameId() + " from player " + move.colorId);
 			      }
 			      
 			   }
