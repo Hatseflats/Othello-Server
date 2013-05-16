@@ -26,5 +26,13 @@ public class Player {
 	public void setColorId(int colorId) {
 		this.colorId = colorId;
 	}
-	
+
+	 @Override
+	 public boolean equals(Object o){
+		 if(o instanceof Player){
+			 Player p = (Player) o;
+			 return playerId == p.playerId && connectionId == p.connectionId;
+	    }
+	    return false;
+	 }
 }

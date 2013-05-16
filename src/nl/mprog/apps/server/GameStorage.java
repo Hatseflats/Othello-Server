@@ -2,6 +2,7 @@ package nl.mprog.apps.server;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class GameStorage {
 	
@@ -15,17 +16,23 @@ public class GameStorage {
 		games.put(key, game);
 	}
 	
-	public int getEnemyConnection(String game_id, String player_id){
-		Game game = games.get(game_id);
-		
-		if(game.getPlayerOne().getPlayerId() == player_id){
-			return game.getPlayerOne().getConnectionId();
-		} else {
-			return game.getPlayerTwo().getConnectionId();
-		}
+	public Game getGameById(String gameId) {
+		return games.get(gameId);
 	}
 	
-	public Game getGameById(String game_id) {
-		return games.get(game_id);
+	public Game getGameByPlayerId(String playerId){
+		Set<String> keySet = games.keySet();
+		
+		for (String gameId : keySet) {
+			if(gameId.contains(playerId)){ // found a game with this player
+				return getGameById(gameId);
+			}
+		}
+		
+		return null;
+	}
+	
+	public void removeGame(String gameId){
+		games.remove(gameId);
 	}
 }

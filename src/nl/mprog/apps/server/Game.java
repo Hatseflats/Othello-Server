@@ -24,4 +24,11 @@ public class Game {
 		return playerTwo;
 	}
 	
+	public Player returnOpponent(String playerId){
+		if(playerOne.getPlayerId() == playerId)
+			return playerTwo;
+		else
+			return playerOne;
+	}
+	
 }

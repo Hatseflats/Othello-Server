@@ -1,6 +1,6 @@
 package nl.mprog.apps.server;
 
-import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class PlayerQueue {
@@ -8,7 +8,7 @@ public class PlayerQueue {
 	Queue<Player> playerQueue;
 
 	public PlayerQueue() {
-		playerQueue = new LinkedList<Player>();
+		playerQueue = new PriorityQueue<Player>();
 	}
 	
 	public Game attemptGameCreate(Player player){
@@ -26,6 +26,10 @@ public class PlayerQueue {
 			playerQueue.add(player);
 			return null;
 		}
+	}
+	
+	public void removePlayerFromQueue(String playerId, int connectionId){
+		playerQueue.remove(new Player(playerId, connectionId));
 	}
 	
 	

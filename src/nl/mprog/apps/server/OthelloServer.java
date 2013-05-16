@@ -5,10 +5,12 @@ import java.io.IOException;
 import nl.mprog.apps.server.Network.Connect;
 import nl.mprog.apps.server.Network.GameData;
 import nl.mprog.apps.server.Network.Move;
+import nl.mprog.apps.server.Network.Error;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.minlog.Log;
 
 public class OthelloServer {
 	
@@ -18,23 +20,38 @@ public class OthelloServer {
 	
 	public OthelloServer() throws IOException{
 		
+		Log.set(Log.LEVEL_TRACE);
+		
 		playerQueue = new PlayerQueue();
 		games = new GameStorage();
-		server = new Server();
-		server.start();
-		server.bind(54555);
 		
-		System.out.println("Started server on TCP port 54555");
+		// Use our own connection implementation so we can store the unique android device id as player id.
+		server = new Server(){
+			protected Connection newConnection () {
+				return new OthelloConnection();
+			}
+		};
+		
+		server.start();
+		server.bind(Network.PORT);
+		
+		System.out.println("Started server on TCP port " + Network.PORT);
 		
 		Network.register(server);
 		
 		server.addListener(new Listener() {
 			
-			   public void received (Connection connection, Object object) {
+			   public void received (Connection c, Object object) {
+				   
+		          OthelloConnection connection = (OthelloConnection) c;
 				   
 				  if (object instanceof Connect) {
 					  
 					  Connect data = (Connect) object;
+					  
+					  if(data.id != null) return; // invalid ID
+					  
+					  connection.playerId = data.id; // store the players id in the connection
 					  
 					  Player player = new Player(data.id, connection.getID());
 					  
@@ -79,13 +96,34 @@ public class OthelloServer {
 			    	  
 			    	  System.out.println("Recieved move for game with id: " + game.getGameId() + " from player " + move.colorId);
 			      }
-			      
+			   }
+			   public void disconnected(Connection c) {
+			          OthelloConnection connection = (OthelloConnection) c;
+			          
+				      System.out.println(connection.getRemoteAddressTCP() + " Has disconnected");
+				      
+				      playerQueue.removePlayerFromQueue(connection.playerId, connection.getID()); // attempt to remove player from queue
+				
+				      Game game = games.getGameByPlayerId(connection.playerId); // attempt to find games in progress by this player
+				      
+				      if(game == null) return; // no game found!
+				      
+				      // if theres a game in progress, send the disconnected players opponent a message that the game is over.
+				      Error opponentDisconnected = new Error();
+				      opponentDisconnected.message = "Your opponent has left the game.";
+				      opponentDisconnected.error = 0;
+				      
+				      server.sendToTCP(game.returnOpponent(connection.playerId).getConnectionId(), opponentDisconnected);
 			   }
 		});
 	}
 
 	public static void main(String[] args) throws IOException {
 		new OthelloServer();
+	}
+	
+	static class OthelloConnection extends Connection {
+		public String playerId;
 	}
 
 }
