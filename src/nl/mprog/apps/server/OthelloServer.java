@@ -47,8 +47,6 @@ public class OthelloServer {
 					  
 					  Connect data = (Connect) object;
 
-                      System.out.println("WHERE THE FUCK DID THE ID GO");
-
                       if(data.id == null) return; // invalid ID
 					  
 					  connection.playerId = data.id; // store the players id in the connection
