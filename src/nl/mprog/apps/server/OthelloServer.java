@@ -1,16 +1,16 @@
 package nl.mprog.apps.server;
 
-import java.io.IOException;
-
-import nl.mprog.apps.server.Network.Connect;
-import nl.mprog.apps.server.Network.GameData;
-import nl.mprog.apps.server.Network.Move;
-import nl.mprog.apps.server.Network.Error;
-
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
+import com.esotericsoftware.kryonet.Listener;
+
+import nl.mprog.apps.server.Network.Connect;
+import nl.mprog.apps.server.Network.Error;
+import nl.mprog.apps.server.Network.GameData;
+import nl.mprog.apps.server.Network.Move;
+
+import java.io.IOException;
 
 public class OthelloServer {
 	
@@ -18,7 +18,7 @@ public class OthelloServer {
 	PlayerQueue playerQueue;
 	GameStorage games;
 	
-	public OthelloServer() throws IOException{
+	public OthelloServer() throws IOException {
 		
 		Log.set(Log.LEVEL_TRACE);
 		
@@ -34,29 +34,29 @@ public class OthelloServer {
 		
 		server.start();
 		server.bind(Network.PORT);
-		
-		System.out.println("Started server on TCP port " + Network.PORT);
-		
+
 		Network.register(server);
 		
 		server.addListener(new Listener() {
 			
 			   public void received (Connection c, Object object) {
-				   
+
 		          OthelloConnection connection = (OthelloConnection) c;
 				   
 				  if (object instanceof Connect) {
 					  
 					  Connect data = (Connect) object;
-					  
-					  if(data.id != null) return; // invalid ID
+
+                      System.out.println("WHERE THE FUCK DID THE ID GO");
+
+                      if(data.id == null) return; // invalid ID
 					  
 					  connection.playerId = data.id; // store the players id in the connection
 					  
 					  Player player = new Player(data.id, connection.getID());
-					  
+
 					  System.out.println("A player with android device ID " + data.id + " and IP " + connection.getRemoteAddressTCP() + " connected.");
-					  
+
 					  Game game = playerQueue.attemptGameCreate(player);
 					  
 					  if(game == null) return;
@@ -100,7 +100,7 @@ public class OthelloServer {
 			   public void disconnected(Connection c) {
 			          OthelloConnection connection = (OthelloConnection) c;
 			          
-				      System.out.println(connection.getRemoteAddressTCP() + " Has disconnected");
+				      System.out.println("Player with id " + connection.playerId + " Has disconnected");
 				      
 				      playerQueue.removePlayerFromQueue(connection.playerId, connection.getID()); // attempt to remove player from queue
 				
